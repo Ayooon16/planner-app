@@ -205,49 +205,31 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-document.querySelectorAll('form[action="/api/server.php"]').forEach(form => {
-    form.addEventListener('submit', async (e) => {
+document.addEventListener('submit', function(e) {
+    const form = e.target;
+    
+    if (form.action && form.action.includes('/api/server.php')) {
         e.preventDefault();
         
         const formData = new FormData(form);
         const data = Object.fromEntries(formData.entries());
         
-        console.log('1. Wysyłam dane:', data);
-        
-        try {
-            const response = await fetch('/api/server.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
-            
-            const result = await response.json();
-            console.log('2. Otrzymałem odpowiedź:', result);
-            console.log('3. result.success =', result.success);
-            
+        fetch('/api/server.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(result => {
             if (result.success) {
-                console.log('4. Przekierowuję do /tasks.php');
                 window.location.href = '/tasks.php';
             } else {
-                console.log('4. Brak sukcesu, wyświetlam alert');
                 alert('Error: ' + (result.error || 'Operation failed'));
             }
-        } catch (error) {
-            console.error('Błąd:', error);
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
             alert('Error: ' + error.message);
-        }
-    });
-});
-
-document.querySelector('form[method="post"]')?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const response = await fetch(window.location.href, {
-        method: 'POST',
-        body: formData
-    });
-    const html = await response.text();
-    document.open();
-    document.write(html);
-    document.close();
+        });
+    }
 });
