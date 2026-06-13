@@ -1,29 +1,18 @@
 version: '3.8'
-
 services:
   backend:
-    build: ./backend
-    container_name: php-backend
+    image: projektazurerejestr.azurecr.io/backend:latest
+    ports:
+      - "8080:8080"
     environment:
       DB_HOST: ${DB_HOST}
       DB_USER: ${DB_USER}
       DB_PASS: ${DB_PASS}
       DB_NAME: ${DB_NAME}
-    networks:
-      - app-network
-    restart: unless-stopped
 
   frontend:
-    build: ./frontend
-    container_name: nginx-frontend
+    image: projektazurerejestr.azurecr.io/frontend:latest
     ports:
       - "80:80"
     depends_on:
       - backend
-    networks:
-      - app-network
-    restart: unless-stopped
-
-networks:
-  app-network:
-    driver: bridge
