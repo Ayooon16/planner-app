@@ -204,3 +204,43 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     }
 });
+
+document.querySelectorAll('form[action="/api/server.php"]').forEach(form => {
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+        
+        try {
+            const response = await fetch('/api/server.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                window.location.href = '/tasks.php';
+            } else {
+                alert('Error: ' + (result.error || 'Operation failed'));
+            }
+        } catch (error) {
+            alert('Error: ' + error.message);
+        }
+    });
+});
+
+document.querySelector('form[method="post"]')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const response = await fetch(window.location.href, {
+        method: 'POST',
+        body: formData
+    });
+    const html = await response.text();
+    document.open();
+    document.write(html);
+    document.close();
+});
