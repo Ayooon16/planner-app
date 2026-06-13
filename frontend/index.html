@@ -13,16 +13,15 @@
                 <h2>Create Account</h2>
             </div>
             <div class="auth-card-body">
-                <form action="/api/server.php" method="post">
+                <form id="registerForm">
                     <div class="auth-form-group">
                         <label>Username</label>
-                        <input type="text" name="username" required>
+                        <input type="text" id="regUsername" required>
                     </div>
                     <div class="auth-form-group">
                         <label>Password</label>
-                        <input type="password" name="password" required>
+                        <input type="password" id="regPassword" required>
                     </div>
-                    <input type="hidden" name="type" value="register">
                     <button type="submit" class="auth-submit-btn">Register</button>
                 </form>
             </div>
@@ -33,20 +32,64 @@
                 <h2>Login to Your Account</h2>
             </div>
             <div class="auth-card-body">
-                <form action="/api/server.php" method="post">
+                <form id="loginForm">
                     <div class="auth-form-group">
                         <label>Username</label>
-                        <input type="text" name="username" required>
+                        <input type="text" id="loginUsername" required>
                     </div>
                     <div class="auth-form-group">
                         <label>Password</label>
-                        <input type="password" name="password" required>
+                        <input type="password" id="loginPassword" required>
                     </div>
-                    <input type="hidden" name="type" value="login">
                     <button type="submit" class="auth-submit-btn">Login</button>
                 </form>
             </div>
         </div>
     </div>
+
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('regUsername').value;
+            const password = document.getElementById('regPassword').value;
+            
+            const response = await fetch('/api/server.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type: 'register', username, password })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                alert('Registration successful! Please login.');
+                document.getElementById('regUsername').value = '';
+                document.getElementById('regPassword').value = '';
+            } else {
+                alert('Registration failed: ' + (data.error || 'Unknown error'));
+            }
+        });
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            const response = await fetch('/api/server.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type: 'login', username, password })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                window.location.href = '/tasks.php';
+            } else {
+                alert('Login failed: ' + (data.error || 'Wrong credentials'));
+            }
+        });
+    </script>
 </body>
 </html>
