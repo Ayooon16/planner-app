@@ -11,3 +11,5 @@ COPY . /var/www/html/
 
 # Ustawienie permissions
 RUN chown -R www-data:www-data /var/www/html
+
+EXPOSE 80
