@@ -205,31 +205,20 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-document.addEventListener('submit', function(e) {
-    const form = e.target;
-    
-    if (form.action && form.action.includes('/api/server.php')) {
-        e.preventDefault();
-        
+document.addEventListener('change', function(e) {
+    if (e.target.name === 'taskStatus' && e.target.closest('form.statusForm')) {
+        const form = e.target.closest('form');
         const formData = new FormData(form);
-        const data = Object.fromEntries(formData.entries());
-        
         fetch('/api/server.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
+            body: JSON.stringify(Object.fromEntries(formData.entries()))
         })
-        .then(response => response.json())
+        .then(r => r.json())
         .then(result => {
-            if (result.success) {
-                window.location.href = '/tasks.php';
-            } else {
-                alert('Error: ' + (result.error || 'Operation failed'));
-            }
+            if (result.success) window.location.href = '/tasks.php';
+            else alert('Error: ' + (result.error || 'Operation failed'));
         })
-        .catch(error => {
-            console.error('Fetch error:', error);
-            alert('Error: ' + error.message);
-        });
+        .catch(err => alert('Error: ' + err.message));
     }
 });

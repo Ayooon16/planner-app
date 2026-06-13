@@ -173,7 +173,6 @@ usort($otherTasks, function ($a, $b) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Task Planner</title>
   <link rel="stylesheet" href="styles.css">
-  <script src="script.js"></script>
 
 </head>
 
@@ -215,7 +214,7 @@ usort($otherTasks, function ($a, $b) {
                   <input type="hidden" name="type" value="changeStatus">
                   <input type="hidden" name="taskId" value="<?= htmlspecialchars($task['id']) ?>">
 
-                  <select name="taskStatus" onchange="this.form.submit()">
+                  <select name="taskStatus">
                     <option value="A" <?= $task['status'] === 'A' ? 'selected' : '' ?>>Active</option>
                     <option value="I" <?= $task['status'] === 'I' ? 'selected' : '' ?>>Inactive</option>
                     <option value="C" <?= $task['status'] === 'C' ? 'selected' : '' ?>>Canceled</option>
@@ -231,7 +230,7 @@ usort($otherTasks, function ($a, $b) {
                   <input type="hidden" name="taskDate" value="<?= htmlspecialchars($task['start_date']) ?>">
                   <input type="hidden" name="taskPrivate" value="<?= htmlspecialchars($task['private']) ?>">
                   <input type="hidden" name="taskUser" value="<?= htmlspecialchars($_SESSION['user_id']) ?>">
-                  <select name="taskStatus" onchange="this.form.submit()">
+                  <select name="taskStatus">
                     <option value="A" <?= $task['status'] === 'A' ? 'selected' : '' ?>>Active</option>
                     <option value="C" <?= $task['status'] === 'C' ? 'selected' : '' ?>>Canceled</option>
                     <option value="I" <?= $task['status'] === 'I' ? 'selected' : '' ?>>Inactive</option>
@@ -512,7 +511,7 @@ usort($otherTasks, function ($a, $b) {
         </form>
       </div>
     </div>
-
+  <script src="script.js"></script>
 </body>
 
 </html>
