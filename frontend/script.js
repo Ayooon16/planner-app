@@ -212,6 +212,8 @@ document.querySelectorAll('form[action="/api/server.php"]').forEach(form => {
         const formData = new FormData(form);
         const data = Object.fromEntries(formData.entries());
         
+        console.log('1. Wysyłam dane:', data);
+        
         try {
             const response = await fetch('/api/server.php', {
                 method: 'POST',
@@ -220,13 +222,18 @@ document.querySelectorAll('form[action="/api/server.php"]').forEach(form => {
             });
             
             const result = await response.json();
+            console.log('2. Otrzymałem odpowiedź:', result);
+            console.log('3. result.success =', result.success);
             
             if (result.success) {
+                console.log('4. Przekierowuję do /tasks.php');
                 window.location.href = '/tasks.php';
             } else {
+                console.log('4. Brak sukcesu, wyświetlam alert');
                 alert('Error: ' + (result.error || 'Operation failed'));
             }
         } catch (error) {
+            console.error('Błąd:', error);
             alert('Error: ' + error.message);
         }
     });

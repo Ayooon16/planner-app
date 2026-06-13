@@ -277,8 +277,7 @@ usort($otherTasks, function ($a, $b) {
                 <td><?= htmlspecialchars($repeatable['name']) ?></td>
                 <td><?= htmlspecialchars($repeatable['description']) ?></td>
                 <td><?= htmlspecialchars($repeatable['start_date']) ?></td>
-                <td><?= htmlspecialchars($repeatable['weekday']) ? $weekdays[$repeatable['weekday']] : "Daily" ?></td>
-                <td><?= htmlspecialchars($repeatable['active']) ? "yes" : "no" ?></td>
+                <td><?= isset($repeatable['weekday']) && $repeatable['weekday'] ? $weekdays[$repeatable['weekday']] : "Daily" ?></td>                <td><?= htmlspecialchars($repeatable['active']) ? "yes" : "no" ?></td>
                 <td><?= htmlspecialchars($repeatable['private']) ? "private" : "-" ?></td>
                 <td><button
                     type="button"
