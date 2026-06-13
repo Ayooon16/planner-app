@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Planner - Login</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-card-header">
+                <h2>Create Account</h2>
+            </div>
+            <div class="auth-card-body">
+                <form action="/api/server.php" method="post">
+                    <div class="auth-form-group">
+                        <label>Username</label>
+                        <input type="text" name="username" required>
+                    </div>
+                    <div class="auth-form-group">
+                        <label>Password</label>
+                        <input type="password" name="password" required>
+                    </div>
+                    <input type="hidden" name="type" value="register">
+                    <button type="submit" class="auth-submit-btn">Register</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="auth-card">
+            <div class="auth-card-header">
+                <h2>Login to Your Account</h2>
+            </div>
+            <div class="auth-card-body">
+                <form action="/api/server.php" method="post">
+                    <div class="auth-form-group">
+                        <label>Username</label>
+                        <input type="text" name="username" required>
+                    </div>
+                    <div class="auth-form-group">
+                        <label>Password</label>
+                        <input type="password" name="password" required>
+                    </div>
+                    <input type="hidden" name="type" value="login">
+                    <button type="submit" class="auth-submit-btn">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

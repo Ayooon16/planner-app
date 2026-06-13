@@ -1,0 +1,51 @@
+# Hasła i konfiguracja lokalna
+.env
+.env.local
+.env.*.local
+db_config.local.php
+
+# Logi
+*.log
+*.error_log
+access.log
+error.log
+
+# Systemy operacyjne
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE i edytory
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+
+# Kompilatory i zależności
+vendor/
+node_modules/
+composer.phar
+composer.lock
+
+# Archiwa
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# Cache
+.cache/
+tmp/
+temp/
+
+# Testy
+coverage/
+phpunit.xml
+.phpunit.result.cache
+
+# Azure
+.azure/
+*.publishsettings
