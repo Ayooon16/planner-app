@@ -182,7 +182,7 @@ usort($otherTasks, function ($a, $b) {
     <form method="post"> <button type="submit" name="noOld" value="<?= $showOld ? "1" : "0" ?>"> <?= $showOld ? "" : "Don't" ?> Show Past Tasks</button> </form>
     <button id="showRecurrent">Show recurrent tasks</button>
     <button id="openPopup">Add new task</button>
-    <form action="index.php?logout=1"><button type="submit">Log out</button></form>
+    <button onclick="window.location.href='/index.php?logout=1'" class="logout-btn">Log out</button>
 
   </div>
   <h1>Your Tasks, <?= $_SESSION['username'] ?></h1>
