@@ -11,23 +11,14 @@ document.addEventListener('DOMContentLoaded', function() {
         if (overlay) overlay.style.display = "none";
     }
 
-    if (openBtn) {
-        openBtn.addEventListener("click", openPopup);
-    }
-
-    if (closeBtn) {
-        closeBtn.addEventListener("click", closePopup);
-    }
+    if (openBtn) openBtn.addEventListener("click", openPopup);
+    if (closeBtn) closeBtn.addEventListener("click", closePopup);
 
     if (overlay) {
         overlay.addEventListener("click", (e) => {
             if (e.target === overlay) closePopup();
         });
     }
-
-    document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") closePopup();
-    });
 
     const repeatable = document.getElementById("taskRepeatable");
     const repeatOptions = document.getElementById("repeatOptions");
@@ -37,23 +28,20 @@ document.addEventListener('DOMContentLoaded', function() {
             const on = repeatable.checked;
             repeatOptions.classList.toggle("open", on);
             repeatOptions.setAttribute("aria-hidden", String(!on));
-
             if (!on) {
                 repeatOptions.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
             }
         }
-
         repeatable.addEventListener("change", syncRepeatUI);
         syncRepeatUI();
     }
 
     const editOverlay = document.getElementById("editPopupOverlay");
     const editCloseBtn = document.getElementById("closeEditPopup");
-    
+
     function changeEditSelects(mode) {
         const select = document.getElementById("editTaskStatus");
         if (!select) return;
-        
         if (mode !== "normal") {
             select.options[1].innerHTML = "Disabled";
             if (select.options[2]) select.options[2].style.visibility = "hidden";
@@ -76,14 +64,14 @@ document.addEventListener('DOMContentLoaded', function() {
         const editTaskPrivate = document.getElementById("editTaskPrivate");
         const recurrenceFields = document.getElementById("recurrenceFields");
         const endDateContainer = document.getElementById("endDateContainer");
-        
+
         if (editTaskId) editTaskId.value = task.id ?? "";
         if (editTaskName) editTaskName.value = task.name ?? "";
         if (editTaskDescription) editTaskDescription.value = task.description ?? "";
         if (taskEditUse) taskEditUse.value = task.user;
-        
+
         changeEditSelects("normal");
-        
+
         let rawDate = task.start_date ?? "";
         if (rawDate.includes(" ")) {
             rawDate = rawDate.replace(" ", "T");
@@ -112,18 +100,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 const dailyCheckbox = document.getElementById("taskDaily");
                 const weekdayRadios = document.querySelectorAll('input[name="taskWeekday"]');
-
-                weekdayRadios.forEach(radio => {
-                    radio.checked = false;
-                });
+                weekdayRadios.forEach(radio => radio.checked = false);
 
                 if (dailyCheckbox) dailyCheckbox.checked = Number(task.daily) === 1;
 
                 if (!dailyCheckbox?.checked && task.weekday) {
                     weekdayRadios.forEach(radio => {
-                        if (Number(radio.value) === Number(task.weekday)) {
-                            radio.checked = true;
-                        }
+                        if (Number(radio.value) === Number(task.weekday)) radio.checked = true;
                     });
                 }
 
@@ -134,10 +117,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 const dailyCheckbox = document.getElementById("taskDaily");
                 if (dailyCheckbox) dailyCheckbox.checked = false;
-
-                document.querySelectorAll('input[name="taskWeekday"]').forEach(radio => {
-                    radio.checked = false;
-                });
+                document.querySelectorAll('input[name="taskWeekday"]').forEach(radio => radio.checked = false);
 
                 const typeInput = document.querySelector('#editPopupForm input[name="type"]');
                 if (typeInput) typeInput.value = "editTask";
@@ -153,17 +133,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (dailyCheckbox) {
         dailyCheckbox.addEventListener("change", function() {
-            if (this.checked) {
-                weekdayRadios.forEach(r => r.checked = false);
-            }
+            if (this.checked) weekdayRadios.forEach(r => r.checked = false);
         });
     }
 
     weekdayRadios.forEach(radio => {
         radio.addEventListener("change", function() {
-            if (this.checked && dailyCheckbox) {
-                dailyCheckbox.checked = false;
-            }
+            if (this.checked && dailyCheckbox) dailyCheckbox.checked = false;
         });
     });
 
@@ -171,9 +147,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (editOverlay) editOverlay.style.display = "none";
     }
 
-    if (editCloseBtn) {
-        editCloseBtn.addEventListener("click", closeEditPopup);
-    }
+    if (editCloseBtn) editCloseBtn.addEventListener("click", closeEditPopup);
 
     if (editOverlay) {
         editOverlay.addEventListener("click", (e) => {
@@ -181,44 +155,69 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Single merged keydown handler (replaces the two duplicate ones)
     document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") closeEditPopup();
+        if (e.key === "Escape") {
+            closePopup();
+            closeEditPopup();
+        }
     });
 
     let showrec = true;
     const showRecurrentBtn = document.getElementById('showRecurrent');
-    
+
     if (showRecurrentBtn) {
         showRecurrentBtn.onclick = function() {
             showrec = !showrec;
-            
             const tab1 = document.getElementById('userNotrec');
             const tab2 = document.getElementById('otherNotrec');
             const tab3 = document.getElementById('userRec');
             const tab4 = document.getElementById('otherRec');
-            
             if (tab1) tab1.style.display = showrec ? '' : 'none';
             if (tab2) tab2.style.display = showrec ? '' : 'none';
             if (tab3) tab3.style.display = showrec ? 'none' : '';
             if (tab4) tab4.style.display = showrec ? 'none' : '';
         };
     }
-});
 
-document.addEventListener('change', function(e) {
-    if (e.target.name === 'taskStatus' && e.target.closest('form.statusForm')) {
-        const form = e.target.closest('form');
-        const formData = new FormData(form);
-        fetch('/api/server.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(Object.fromEntries(formData.entries()))
-        })
-        .then(r => r.json())
-        .then(result => {
-            if (result.success) window.location.href = '/tasks.php';
-            else alert('Error: ' + (result.error || 'Operation failed'));
-        })
-        .catch(err => alert('Error: ' + err.message));
+    function handleFormSubmit(form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const data = Object.fromEntries(new FormData(form).entries());
+            fetch('/api/server.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(r => r.json())
+            .then(result => {
+                if (result.success) window.location.href = '/tasks.php';
+                else alert('Error: ' + (result.error || 'Operation failed'));
+            })
+            .catch(err => alert('Error: ' + err.message));
+        });
     }
+
+    const popupForm = document.getElementById('popupForm');
+    const editPopupForm = document.getElementById('editPopupForm');
+    if (popupForm) handleFormSubmit(popupForm);
+    if (editPopupForm) handleFormSubmit(editPopupForm);
+
+    document.addEventListener('change', function(e) {
+        if (e.target.name === 'taskStatus' && e.target.closest('form.statusForm')) {
+            const form = e.target.closest('form');
+            const data = Object.fromEntries(new FormData(form).entries());
+            fetch('/api/server.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(r => r.json())
+            .then(result => {
+                if (result.success) window.location.href = '/tasks.php';
+                else alert('Error: ' + (result.error || 'Operation failed'));
+            })
+            .catch(err => alert('Error: ' + err.message));
+        }
+    });
 });
